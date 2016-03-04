@@ -26,5 +26,5 @@ do
   # The last of the hashes that the ipfs-add command generates is the one of the
   # wrapping directory 
   hash=`sudo -u $IPFS_USER -i -- ipfs add -q -r -w $destdir| tail -n 1`
-  $URLOPEN_CMD -m "${QRCODE_PAGE_URL}/?http://ipfs.io/ipfs/${hash}/"
+  $URLOPEN_CMD "${QRCODE_PAGE_URL}/?http://ipfs.io/ipfs/${hash}/"
 done

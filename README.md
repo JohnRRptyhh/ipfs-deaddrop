@@ -14,6 +14,15 @@ When the IPFS dead drop is finished uploading it opens a web page that displays 
 QR code that contains the IPFS address of your files. Just scan that and share the
 address with anyone.
 
+## How to use?
+
+  * Bring a USB memory stick (FAT-formatted) with the file(s) you want to share and smartphone with a QR code scanner app.
+  * Plug a USB memory stick into the dead drop host.
+  * Wait ca. 5 seconds until the dead drop starts copying your files.
+  * Wait until the whole process is complete. The QR code will be shown once it is completed.
+  * Scan the QR code with your mobile and share the URL with your friends.
+     * The QR code contains the content hash that you need to access your files using IPFS.
+
 ## Prerequisites
 
   * You need a Linux-device with udev
