@@ -32,5 +32,4 @@ address with anyone.
 
   * Copy the udev-rule-script to `/etc/udev/rules.d/mount.rules`
   * Copy the dumper script to `/usr/local/bin/dumpusb` and edit it to configure to your needs.
-  * Make sure the a copy of the QR code page is available by pinning it to your local IPFS node.
-
+  * Make sure the a copy of the QR code page is available by pinning it to your local IPFS node. Currently with `ipfs pin add QmUzER8RFyFMKfcE5WKcCWdK1pFXJMVKoCzeHEw2XWpibA`.
