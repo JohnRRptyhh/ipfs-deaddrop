@@ -1,0 +1,30 @@
+#! /bin/bash -x
+
+#### CONFIGURATION ####
+
+AUTOMOUNT_DIR=/automount
+DUMP_DIR=/dump
+QRCODE_PAGE_URL=http://ipfs.io/ipfs/QmUzER8RFyFMKfcE5WKcCWdK1pFXJMVKoCzeHEw2XWpibA/
+URLOPEN_CMD="mosquitto_pub -h 10.0.1.17 -t siri/open -m"
+IPFS_USER=ipfs
+
+#### END CONFIGURATION ####
+
+# Grace period for USB and udev to become ready
+sleep 5
+
+dumpdir=/dump/`date +%Y%m%d%H%M%S`
+for partition in $( ls /dev/sdb?* );
+do
+  mkdir -p $AUTOMOUNT_DIR || break
+  mount $partition $AUTOMOUNT_DIR || break
+  mkdir -p $DUMP_DIR/`basename $partition` || break
+  destdir=$DUMP_DIR/`basename $partition`
+  cp -r /automount/* $destdir
+  umount /automount
+
+  # The last of the hashes that the ipfs-add command generates is the one of the
+  # wrapping directory 
+  hash=`sudo -u $IPFS_USER -i -- ipfs add -q -r -w $destdir| tail -n 1`
+  $URLOPEN_CMD -m "${QRCODE_PAGE_URL}/?http://ipfs.io/ipfs/${hash}/"
+done

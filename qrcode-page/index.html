@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>QR Code Viewer</title>
+    <script src="./vendor/jquery.min.js"></script>
+    <script src="./vendor/qrcode.min.js"></script>
+    <style type="text/css">
+      body {
+        background: url('images/stars.jpg') no-repeat #5a7a8e;
+        font-family: sans-serif;
+      }
+      #qrcode {
+        background-color: #ffffff;
+        width: 700px;
+        height: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 20px;
+        padding: 10px;
+        cursor: pointer;
+      }
+      #address {
+        margin-left: auto;
+        margin-right: auto;
+        color: #ffffff;
+        font-size: 23px;
+        text-align: center;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="qrcode"></div>
+    <div id="address"></div>
+    <script>
+      var address = 'http://c-base.org/';
+      if (window.location.search) {
+        address = window.location.search.substr(1);
+      }
+      var qrcode = new QRCode('qrcode', {
+        width: 700,
+        height: 700
+      });
+      qrcode.makeCode(address);
+      $('#qrcode').click(function () {
+        window.location.href = address;
+      });
+      $('#address').html(address);
+    </script>
+  </body>
+</html>

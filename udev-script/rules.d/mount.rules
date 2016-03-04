@@ -1,0 +1,2 @@
+# /etc/udev/rules.d/mount.rules
+ENV{DEVTYPE}=="usb_device", ACTION=="add", SUBSYSTEM=="usb", RUN+="/usr/local/bin/dumpusb /dev/sdb &"
