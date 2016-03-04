@@ -17,9 +17,11 @@ address with anyone.
 ## Prerequisites
 
   * You need a Linux-device with udev
+  * IPFS should be installed and your local system should be a IPFS node (e.g. you should be able to add files using `ipfs add ...`).
 
 ## How to install?
 
-  * Copy the udev-rule-script to ``
-
+  * Copy the udev-rule-script to `/etc/udev/rules.d/mount.rules`
+  * Copy the dumper script to `/usr/local/bin/dumpusb` and edit it to configure to your needs.
+  * Make sure the a copy of the QR code page is available by pinning it to your local IPFS node.
 
