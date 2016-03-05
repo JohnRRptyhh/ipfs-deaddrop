@@ -14,6 +14,8 @@ When the IPFS dead drop is finished uploading it opens a web page that displays 
 QR code that contains the IPFS address of your files. Just scan that and share the
 address with anyone.
 
+![In action](https://ipfs.io/ipfs/Qmb6JxfKsNhAoa8CVPpSrEH8hiHVWrJh7AtSWgHd9GyRZ6)
+
 ## How to use?
 
   * Bring a USB memory stick (FAT-formatted) with the file(s) you want to share and smartphone with a QR code scanner app.
@@ -33,5 +35,4 @@ address with anyone.
   * Copy the udev-rule-script to `/etc/udev/rules.d/mount.rules`
   * Reload your udev rules afterwards: `udevadm control --reload-rules`
   * Copy the dumper script to `/usr/local/bin/dumpusb` and edit it to configure to your needs.
-  * Make sure the a copy of the QR code page is available by pinning it to your local IPFS node.
-
+  * Make sure the a copy of the QR code page is available by pinning it to your local IPFS node. Currently with `ipfs pin add QmUzER8RFyFMKfcE5WKcCWdK1pFXJMVKoCzeHEw2XWpibA`.
