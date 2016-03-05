@@ -31,6 +31,7 @@ address with anyone.
 ## How to install?
 
   * Copy the udev-rule-script to `/etc/udev/rules.d/mount.rules`
+  * Reload your udev rules afterwards: `udevadm control --reload-rules`
   * Copy the dumper script to `/usr/local/bin/dumpusb` and edit it to configure to your needs.
   * Make sure the a copy of the QR code page is available by pinning it to your local IPFS node.
 
