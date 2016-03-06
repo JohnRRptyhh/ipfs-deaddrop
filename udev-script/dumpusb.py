@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 import os
 import sys
 import time
@@ -6,6 +7,7 @@ import glob
 import subprocess
 import threading
 import signal
+import json
 
 #### CONFIGURATION ####
 
@@ -14,6 +16,10 @@ DUMP_DIR = '/dump'
 QRCODE_PAGE_URL = 'http://siri.cbrp3.c-base.org:8080/ipfs/QmUzER8RFyFMKfcE5WKcCWdK1pFXJMVKoCzeHEw2XWpibA/'
 URLOPEN_CMD = "mosquitto_pub -h 10.0.1.17 -t siri/open -m"
 IPFS_USER = 'ipfs'
+STATEFILE = '/tmp/dumpusb.json'
+PERCENTFILE = '/tmp/percent.txt'
+PERCENT_URL = 'http://siri.cbrp3.c-base.org/status'
+PROGRESS_HTML_URL = 'http://localhost/dumpusb.html'
 
 #### END CONFIGURATION ####
 
@@ -59,11 +65,18 @@ class ProgressMeter(threading.Thread):
         total = self.do_du(AUTOMOUNT_DIR)
         while self.is_ongoing():
             curr = self.do_du(dumpdir)
-            print curr / total
+            percent = (curr / total) * 100.0
+            int_percent = int(percent)
+            with open(STATEFILE, mode="w") as f:
+                json.dump({"percent": int_percent, "message": "Copying file(s) ..."}, f)
+            with open(PERCENTFILE, mode="w") as f:
+                f.write('%d\n' % int_percent)
+                
             time.sleep(0.5)
 
-
 def main():
+    with open(PERCENTFILE, mode="w") as f:
+        f.write('%d\n' % 0)
     meter = None
     def signal_handler(signal, frame):
         print 'You pressed Ctrl+C!'
@@ -80,9 +93,14 @@ def main():
         print("Importing files from partition %s ..." % partition)
         subprocess.call(['mount', '-o', 'ro', partition, AUTOMOUNT_DIR])
         
+        # Show status page
+        msg = '%s "%s"' % (URLOPEN_CMD, PERCENT_URL)
+        print msg
+        subprocess.call(msg.split())
+        
         meter = ProgressMeter(dumpdir)
         meter.start()
-        command = "rsync -r %s/* %s" % (AUTOMOUNT_DIR, dumpdir)
+        command = "rsync --one-file-system -r %s/* %s" % (AUTOMOUNT_DIR, dumpdir)
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output = ''
    
@@ -92,32 +110,24 @@ def main():
         exitCode = process.returncode
 
         subprocess.call(['umount', AUTOMOUNT_DIR])
+        
+        with open(STATEFILE, mode="w") as f:
+            json.dump({"percent": 100, "message": "Publishing on IPFS ..."}, f)
+            
+        with open(PERCENTFILE, mode="w") as f:
+            f.write('%d\n' % 100)
     
         if (exitCode == 0):
             command="sudo -u %s -i -- ipfs add -q -r -w %s/* | tail -n 1" % ('ipfs', dumpdir)
             print(command)
             process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             output, err = process.communicate()
-            print("HASH")
-            print(output)
-	    msg = "%s %s/?http://siri.cbrp3.c-base.org:8080/ipfs/%s/" % (URLOPEN_CMD, QRCODE_PAGE_URL, output)
-	    print(msg)
             rc = process.returncode
+            ipfs_hash = output.split()[0]
+            msg = '%s "%s?http://siri.cbrp3.c-base.org:8080/ipfs/%s/"' % (URLOPEN_CMD, QRCODE_PAGE_URL, ipfs_hash)
+            print msg
+            subprocess.call(msg.split())
             return output
         else:
             raise Exception(command, exitCode, output)
 main()
-
-#do
-#  mkdir -p $AUTOMOUNT_DIR || break
-#  mount $partition $AUTOMOUNT_DIR || break
-#  mkdir -p $dumpdir/`basename $partition` || break
-#  destdir=$dumpdir/`basename $partition`
-#  cp -r /automount/* $destdir
-#  umount /automount
-#
-#  # The last of the hashes that the ipfs-add command generates is the one of the
-#  # wrapping directory
-#  hash=`sudo -u ${IPFS_USER} -i -- ipfs add -q -r -w ${destdir}/* | tail -n 1`
-#  $URLOPEN_CMD "${QRCODE_PAGE_URL}/?http://siri.cbrp3.c-base.org:8080/ipfs/${hash}/"
-#done
