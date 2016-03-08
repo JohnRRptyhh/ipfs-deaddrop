@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>QR Code Viewer</title>
+    <script src="./vendor/qrcode.min.js"></script>
+    <script src="deaddrop.js"></script>
+    <link rel="stylesheet" href="style/deaddrop.css">
+    <link rel="source" href="https://github.com/c-base/ipfs-deaddrop">
+  </head>
+  <body>
+    <h1>USB Dead Drop</h1>
+    <div id="welcome">
+      <p>
+      This is a <a href="https://github.com/c-base/ipfs-deaddrop">USB Dead Drop</a> web publishing system that can publish the contents of a USB thumbdrive to the <a href="https://ipfs.io/">Interplanetary Filesystem</a>, a peer-to-peer internet filesystem aiming to serve the permanent web.
+      </p>
+      <p>
+      Once the contents of your USB thumbdrive have been uploaded to the IPFS network, you will receive a <a href="https://ipfs.io/ipfs/QmNhFJjGcMPqpuYfxL62VVB9528NXqDNMFXiqN5bgFYiZ1/its-time-for-the-permanent-web.html">permanent, public URL</a> to them.
+      </p>
+      <div id="insert">Insert USB drive to continue</div>
+    </div>
+    <div id="progress">
+      <progress id="status" max="100" value="0"></progress>
+      <h2 id="message"></h2>
+    </div>
+    <div id="result">
+      <div id="qrcode"></div>
+      <div id="address"></div>
+    </div>
+  </body>
+</html>
