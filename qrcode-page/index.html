@@ -54,6 +54,7 @@
       document.addEventListener('DOMContentLoaded', function () {
         var address = 'http://c-base.org/';
         var size = window.innerHeight * 0.6;
+        var margin = window.innerHeight * 0.2 - 80;
         if (window.location.search) {
           address = window.location.search.substr(1);
         }
@@ -63,6 +64,7 @@
         });
         qrcode.makeCode(address);
         var qrcodeEl = document.getElementById('qrcode')
+        document.body.style.paddingTop = margin + 'px';
         qrcodeEl.style.width = size + 'px';
         qrcodeEl.style.height = size + 'px';
 
