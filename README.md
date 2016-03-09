@@ -14,7 +14,7 @@ When the IPFS dead drop is finished uploading it opens a web page that displays 
 QR code that contains the IPFS address of your files. Just scan that and share the
 address with anyone.
 
-![In action](https://ipfs.io/ipfs/Qmb6JxfKsNhAoa8CVPpSrEH8hiHVWrJh7AtSWgHd9GyRZ6)
+![Welcome screen](https://ipfs.io/ipfs/QmTv7K8z3JkcL3rfsYdtwm2bWdMBCHZCQNNggjY9xuniqM) ![Results screen](https://ipfs.io/ipfs/QmbKYuuaUDqLCSoH1srcSwLaiVqwtZm2DA1ihGsgkpqGQR)
 
 ## How to use?
 
