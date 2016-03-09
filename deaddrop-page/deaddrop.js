@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
   render();
   setInterval(function () {
     fetchState();
-  }, 1000);
+  }, 500);
   fetchState();
 });
 window.addEventListener('resize', function () {
