@@ -6,7 +6,8 @@ var state = {
     percent: 100,
     qrcode: null
   },
-  timer: null
+  timer: null,
+  lastShown: null
 };
 
 var drawQr = function (size, element, address) {
@@ -41,7 +42,7 @@ var renderProgress = function () {
 };
 
 var determineView = function () {
-  if (state.progress.qrcode) {
+  if (state.progress.qrcode && state.progress.qrcode !== state.lastShown) {
     state.view = 'result';
     return;
   }
@@ -53,7 +54,7 @@ var determineView = function () {
 };
 
 var render = function (address) {
-  if (state.timer) {
+  if (state.timer && state.lastShown && state.lastShown !== state.progress.qrcode) {
     window.clearTimeout(state.timer);
     state.timer = null;
   }
@@ -67,6 +68,7 @@ var render = function (address) {
       welcomeEl.style.display = 'block';
       break;
     case 'progress':
+      state.lastShown = null;
       resultEl.style.display = 'none';
       welcomeEl.style.display = 'none';
       progressEl.style.display = 'block'
@@ -79,6 +81,7 @@ var render = function (address) {
       renderQr();
       state.timer = window.setTimeout(function () {
         state.view = 'welcome';
+        state.lastShown = state.progress.qrcode;
         state.progress.qrcode = null;
         render();
       }, 240 * 1000);
