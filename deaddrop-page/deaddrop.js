@@ -96,10 +96,6 @@ if (window.location.search) {
 state.url = address;
 
 document.addEventListener('DOMContentLoaded', function () {
-  state.view = window.location.hash.substr(1);
-  if (!state.view) {
-    state.view = 'welcome';
-  }
   render();
   setInterval(function () {
     fetchState();
@@ -107,13 +103,6 @@ document.addEventListener('DOMContentLoaded', function () {
   fetchState();
 });
 window.addEventListener('resize', function () {
-  render();
-});
-window.addEventListener('hashchange', function (s) {
-  state.view = window.location.hash.substr(1);
-  if (!state.view) {
-    state.view = 'welcome';
-  }
   render();
 });
 
