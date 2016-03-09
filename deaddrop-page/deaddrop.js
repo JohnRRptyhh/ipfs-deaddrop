@@ -89,11 +89,11 @@ var render = function (address) {
   }
 };
 
-var address = 'http://c-base.org/';
+var address = 'http://siri.cbrp3.c-base.org/deaddrop.json',
 if (window.location.search) {
   address = window.location.search.substr(1);
 }
-state.progress.qrcode = address;
+state.url = address;
 
 document.addEventListener('DOMContentLoaded', function () {
   state.view = window.location.hash.substr(1);
