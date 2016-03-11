@@ -9,14 +9,17 @@ import threading
 import signal
 import json
 
+from datetime import datetime
+
 #### CONFIGURATION ####
 
 AUTOMOUNT_DIR = '/automount'
 DUMP_DIR = '/dump'
-QRCODE_PAGE_URL = 'http://siri.cbrp3.c-base.org:8080/ipfs/QmUzER8RFyFMKfcE5WKcCWdK1pFXJMVKoCzeHEw2XWpibA/'
-URLOPEN_CMD = "mosquitto_pub -h 10.0.1.17 -t siri/open -m"
+QRCODE_PAGE_URL = 'http://ipfs.io/ipfs/QmawVyLHjR8qmYXd5GZgKUPhvnzDsJko1g6H8mkHzLKNij'
+#URLOPEN_CMD = "sudo -u siri -i luakit --display=:0.0"
+URLOPEN_CMD = "echo mosquitto_pub -h 10.0.1.17 -t siri/donotopen -m"
 IPFS_USER = 'ipfs'
-STATEFILE = '/tmp/dumpusb.json'
+STATEFILE = '/var/www/siri-data-rescue/www/deaddrop.json'
 PERCENTFILE = '/tmp/percent.txt'
 PERCENT_URL = 'http://siri.cbrp3.c-base.org/status'
 PROGRESS_HTML_URL = 'http://localhost/dumpusb.html'
@@ -65,10 +68,12 @@ class ProgressMeter(threading.Thread):
         total = self.do_du(AUTOMOUNT_DIR)
         while self.is_ongoing():
             curr = self.do_du(dumpdir)
-            percent = (curr / total) * 100.0
+            percent = (curr / float(total)) * 100.0
             int_percent = int(percent)
+	    if int_percent == 100:
+                int_percent = 99
             with open(STATEFILE, mode="w") as f:
-                json.dump({"percent": int_percent, "message": "Copying file(s) ..."}, f)
+                json.dump({"changed": datetime.utcnow().isoformat(), "percent": int_percent, "message": "Copying file(s) ...", "qrcode": None}, f)
             with open(PERCENTFILE, mode="w") as f:
                 f.write('%d\n' % int_percent)
                 
@@ -77,6 +82,8 @@ class ProgressMeter(threading.Thread):
 def main():
     with open(PERCENTFILE, mode="w") as f:
         f.write('%d\n' % 0)
+    with open(STATEFILE, mode="w") as f:
+        json.dump({"changed": datetime.utcnow().isoformat(), "percent": 0, "message": "Copying file(s) ...", "qrcode": None}, f)
     meter = None
     def signal_handler(signal, frame):
         print 'You pressed Ctrl+C!'
@@ -112,7 +119,7 @@ def main():
         subprocess.call(['umount', AUTOMOUNT_DIR])
         
         with open(STATEFILE, mode="w") as f:
-            json.dump({"percent": 100, "message": "Publishing on IPFS ..."}, f)
+            json.dump({"changed": datetime.utcnow().isoformat(), "percent": 99, "message": "Publishing on IPFS ...", "qrcode": None}, f)
             
         with open(PERCENTFILE, mode="w") as f:
             f.write('%d\n' % 100)
@@ -124,10 +131,15 @@ def main():
             output, err = process.communicate()
             rc = process.returncode
             ipfs_hash = output.split()[0]
-            msg = '%s "%s?http://siri.cbrp3.c-base.org:8080/ipfs/%s/"' % (URLOPEN_CMD, QRCODE_PAGE_URL, ipfs_hash)
+            qrcode = 'http://ipfs.io/ipfs/%s/' % ipfs_hash
+            msg = '%s "%s?%s"' % (URLOPEN_CMD, QRCODE_PAGE_URL, qrcode)
             print msg
-            subprocess.call(msg.split())
+            with open(STATEFILE, mode="w") as f:
+                json.dump({"changed": datetime.utcnow().isoformat(), "percent": 100, "message": "Success!", "qrcode": qrcode}, f)
+            #subprocess.call(msg.split())
             return output
         else:
+            with open(STATEFILE, mode="w") as f:
+                json.dump({"changed": datetime.utcnow().isoformat(),"percent": 100, "message": "There was an error! Please try again.", "qrcode": None}, f)
             raise Exception(command, exitCode, output)
 main()
