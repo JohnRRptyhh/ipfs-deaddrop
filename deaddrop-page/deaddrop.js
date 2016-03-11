@@ -30,7 +30,11 @@ var renderQr = function () {
     window.location.href = state.progress.qrcode;
   });
   var parts = state.progress.qrcode.split('/ipfs/');
-  var qrString = parts[0] + '/ipfs/<br>' + parts[1];
+  if (parts.length == 1) {
+    var qrString = state.progress.qrcode;
+  } else {
+    var qrString = parts[0] + '/ipfs/<br>' + parts[1];
+  }
   document.getElementById('address').innerHTML = qrString;
 };
 
@@ -89,7 +93,7 @@ var render = function (address) {
   }
 };
 
-var address = 'http://siri.cbrp3.c-base.org/deaddrop.json',
+var address = 'http://siri.cbrp3.c-base.org/deaddrop.json';
 if (window.location.search) {
   address = window.location.search.substr(1);
 }
