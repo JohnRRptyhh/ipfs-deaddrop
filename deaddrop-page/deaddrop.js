@@ -125,7 +125,11 @@ var fetchState = function () {
       return;
     }
     if (req.status === 200) {
-      state.progress = JSON.parse(req.responseText);
+      try {
+        state.progress = JSON.parse(req.responseText);
+      } catch (e) {
+        state.progress.message = "Error parsing server file";
+      }
       determineView();
       render();
     }
