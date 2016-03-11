@@ -87,7 +87,7 @@ var render = function (address) {
         state.lastShown = state.progress.qrcode;
         state.progress.qrcode = null;
         render();
-      }, 240 * 1000);
+      }, 120 * 1000);
       break;
   }
   var messageEl = document.getElementById('message');
