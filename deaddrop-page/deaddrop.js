@@ -52,7 +52,7 @@ var determineView = function () {
     }
   }
 
-  if (state.progress.qrcode && state.progress.qrcode !== state.lastShown) {
+  if (state.progress.qrcode) {
     state.view = 'result';
     return;
   }
@@ -89,12 +89,7 @@ var render = function () {
       break;
   }
   var messageEl = document.getElementById('message');
-  if (state.view !== 'welcome' || state.progress.message && state.progress.message.indexOf('Error') !== -1) {
-    messageEl.innerHTML = state.progress.message;
-    state.progress.lastMessageShown = state.progress.message;
-  } else {
-    messageEl.innerHTML = '';
-  }
+  messageEl.innerHTML = state.progress.message;
   document.body.className = state.view;
 };
 
