@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
   render();
   setInterval(function () {
     fetchState();
-  }, 500);
+  }, 1000);
   fetchState();
 });
 window.addEventListener('resize', function () {
