@@ -7,7 +7,8 @@ var state = {
     qrcode: null
   },
   timer: null,
-  lastShown: null
+  lastShown: null,
+  lastMessageShown: null
 };
 
 var drawQr = function (size, element, address) {
@@ -39,9 +40,7 @@ var renderQr = function () {
 };
 
 var renderProgress = function () {
-  var messageEl = document.getElementById('message');
   var statusEl = document.getElementById('status');
-  messageEl.innerHTML = state.progress.message;
   statusEl.value = state.progress.percent;
 };
 
@@ -91,6 +90,14 @@ var render = function (address) {
       }, 240 * 1000);
       break;
   }
+  var messageEl = document.getElementById('message');
+  if (state.view !== 'welcome' || state.progress.message && state.progress.message.indexOf('Error') !== -1) {
+    messageEl.innerHTML = state.progress.message;
+    state.progress.lastMessageShown = state.progress.message;
+  } else {
+    messageEl.innerHTML = '';
+  }
+  document.body.className = state.view;
 };
 
 var address = 'http://siri.cbrp3.c-base.org/deaddrop.json';

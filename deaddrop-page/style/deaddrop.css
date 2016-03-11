@@ -43,9 +43,15 @@ a {
   -webkit-animation-iteration-count: infinite;
 }
 #message {
+  margin: 42px;
+  font-size: 21px;
+}
+body.progress #message {
   -webkit-animation: pulsate 2s ease-in-out;
   -webkit-animation-iteration-count: infinite;
-  margin: 42px;
+}
+body.result #message {
+  display: none;
 }
 #instructions {
   margin-top: 42px;
