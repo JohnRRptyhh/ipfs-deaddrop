@@ -2,7 +2,7 @@ var state = {
   view: 'welcome',
   url: 'http://siri.cbrp3.c-base.org/deaddrop.json',
   progress: {
-    message: 'Publishing on IPFS...',
+    message: null,
     percent: 100,
     qrcode: null
   }
