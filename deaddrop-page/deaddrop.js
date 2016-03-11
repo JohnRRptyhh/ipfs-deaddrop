@@ -5,10 +5,7 @@ var state = {
     message: 'Publishing on IPFS...',
     percent: 100,
     qrcode: null
-  },
-  timer: null,
-  lastShown: null,
-  lastMessageShown: null
+  }
 };
 
 var drawQr = function (size, element, address) {
@@ -45,6 +42,16 @@ var renderProgress = function () {
 };
 
 var determineView = function () {
+  if (state.progress.changed) {
+    var changedDate = new Date(state.progress.changed);
+    var now = new Date();
+    var elapsed = now.getTime() - changedDate.getTime();
+    if (elapsed > 4 * 60 * 1000) {
+      state.progress.qrcode = null;
+      state.progress.message = '';
+    }
+  }
+
   if (state.progress.qrcode && state.progress.qrcode !== state.lastShown) {
     state.view = 'result';
     return;
@@ -56,14 +63,11 @@ var determineView = function () {
   state.view = 'progress';
 };
 
-var render = function (address) {
-  if (state.timer && state.lastShown && state.lastShown !== state.progress.qrcode) {
-    window.clearTimeout(state.timer);
-    state.timer = null;
-  }
+var render = function () {
   var welcomeEl = document.getElementById('welcome');
   var progressEl = document.getElementById('progress');
   var resultEl = document.getElementById('result');
+
   switch (state.view) {
     case 'welcome':
       progressEl.style.display = 'none';
@@ -82,12 +86,6 @@ var render = function (address) {
       welcomeEl.style.display = 'none';
       resultEl.style.display = 'block';
       renderQr();
-      state.timer = window.setTimeout(function () {
-        state.view = 'welcome';
-        state.lastShown = state.progress.qrcode;
-        state.progress.qrcode = null;
-        render();
-      }, 120 * 1000);
       break;
   }
   var messageEl = document.getElementById('message');
