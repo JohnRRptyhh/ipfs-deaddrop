@@ -36,3 +36,11 @@ address with anyone.
   * Reload your udev rules afterwards: `udevadm control --reload-rules`
   * Copy the dumper script to `/usr/local/bin/dumpusb` and edit it to configure to your needs.
   * Make sure the a copy of the QR code page is available by pinning it to your local IPFS node. Currently with `ipfs pin add QmUzER8RFyFMKfcE5WKcCWdK1pFXJMVKoCzeHEw2XWpibA`.
+
+## Mirroring
+
+It is easy to set up a mirror of the dead drops using [ipfs-ringpin](https://github.com/c-base/ipfs-ringpin). The IPNS address for c-base's Siri is:
+
+```
+/ipns/QmdCYibjHMinqnh7eWw8WEMsopi5CWz5yD2R86nYegL2Sr/pinlist/deaddrop
+```
